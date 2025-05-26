@@ -1,5 +1,5 @@
 [project]
-name = "python_template"
+name = "pyxledger"
 version = "0.1.0"
 description = "A simple Python template project"
 authors = [{ name = "David Skoland", email = "david.skoland@intrix.no" }]
