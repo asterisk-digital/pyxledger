@@ -20,3 +20,4 @@
 *.egg-info
 
 uv.lock
+.tox/
