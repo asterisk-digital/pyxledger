@@ -1,40 +1,31 @@
 # pyxledger
 
+A simple Python library for interfacing with the XLedger API
+
 ## Setup
 
-To set up the python environmentm you need `uv`, then run:
+This is typically used as a submodule, which can be added to a python project as follows:
+
 ```(bash)
-uv venv venv && source venv/bin/activate && uv pip install ".[dev]"
-op inject -i envtemplate.txt -o .env
+git submodule add git@github.com:intrix-as/pyxledger.git ./src/pyxledger
 ```
 
-## Running
+This will put pyxledger in the src/pyxledger folder of the project, which can then be imported as a module.
 
-The script depends on a set of envvars. To load these from `.env`, run
-```(bash)
-python3 -m pyxledger.main --envfile=.env
-```
+The library can be used as follows:
 
-## Linting
+## Usage
 
-```(bash)
-ruff check .
-```
+```(python)
+import pyxledger
 
-## Formatting
+url = 'xledger.net/graphql'
+credentials = {
+  'token': 'your_token'
+}
 
-```(bash)
-ruff format .
-```
+client = pyxledger.Client(url, credentials)
 
-## Testing
-
-```(bash)
-tox
-```
-
-## Deployment
-
-```(bash)
-./scripts/deploy.sh .env
+# Getting customers is an example here
+result = client.get_customers()
 ```
