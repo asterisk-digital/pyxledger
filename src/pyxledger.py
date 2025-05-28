@@ -146,3 +146,23 @@ class Client:
         '''
 
         return self.get_all_data(query_string, 'suppliers')
+
+    def get_projects(self):
+        query_string = '''
+        {
+          projects(last: 10000) {
+            edges {
+              node {
+                dbId
+                code
+                description
+                company {
+                    companyNumber
+                }
+              }
+            }
+          }
+        }
+        '''
+
+        return self.get_all_data(query_string, 'projects')
