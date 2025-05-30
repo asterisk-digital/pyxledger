@@ -30,7 +30,16 @@ class Client:
             fields {
               name
               type {
+                kind
                 name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                  }
+                }
               }
             }
           }
