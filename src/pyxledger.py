@@ -1,4 +1,5 @@
 import requests
+from graphql import build_client_schema, get_introspection_query, print_schema
 
 
 class Client:
@@ -165,8 +166,9 @@ class Client:
                 dbId
                 code
                 description
-                company {
-                    companyNumber
+
+                owner {
+                    dbId
                 }
               }
             }
@@ -175,3 +177,17 @@ class Client:
         '''
 
         return self.get_all_data(query_string, 'projects')
+
+    def get_introspection(self):
+        introspection_query = get_introspection_query()
+        return self.query(introspection_query)
+
+    # Raw query function
+    def query(self, query_string):
+        headers = {
+            "Authorization": f"token {self.token}"
+        }
+
+        response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
+        data = response.json()
+        return data
