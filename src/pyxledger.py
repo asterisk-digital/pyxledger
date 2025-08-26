@@ -1,25 +1,29 @@
 import requests
 from graphql import build_client_schema, get_introspection_query, print_schema
 
+class PyXLedgerException(Exception):
+    pass
 
 class Client:
     def __init__(self, api_token: str, api_domain: str = "www.xledger.net"):
         self.api_url = f"https://{api_domain}/graphql"
         self.api_token = api_token
 
-    def get_all_data(self, query_string, model) -> list[dict]:
+    def get_all_data(self, query_string: str, model: str) -> list[dict]:
         headers = {"Authorization": f"token {self.api_token}"}
 
         response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
         data = response.json()
 
+        if data["errors"]:
+            raise PyXLedgerException(data["errors"][0]["message"])
+
         # Extract the list of dictionaries
         result_dicts = []
         for entry in data["data"][model]["edges"]:
-            db_id = entry["node"]["dbId"]
+            # db_id = entry["node"]["dbId"]
             values = {key: value for key, value in entry["node"].items()}
-            result_dict = {db_id: values}
-            result_dicts.append(result_dict)
+            result_dicts.append(values)
 
         return result_dicts
 
