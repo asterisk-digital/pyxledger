@@ -7,19 +7,21 @@ class Client:
         self.api_url = f"https://{api_domain}/graphql"
         self.api_token = api_token
 
-    def get_all_data(self, query_string, model):
+    def get_all_data(self, query_string, model) -> list[dict]:
         headers = {"Authorization": f"token {self.api_token}"}
 
         response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
         data = response.json()
 
         # Extract the list of dictionaries
-        result_dict = {}
+        result_dicts = []
         for entry in data["data"][model]["edges"]:
             db_id = entry["node"]["dbId"]
             values = {key: value for key, value in entry["node"].items()}
-            result_dict[db_id] = values
-        return result_dict
+            result_dict = {db_id: values}
+            result_dicts.append(result_dict)
+
+        return result_dicts
 
     def get_all_fields(self, type_name):
         query_string = """
@@ -153,7 +155,7 @@ class Client:
 
         return self.get_all_data(query_string, "suppliers")
 
-    def get_projects(self):
+    def get_projects(self) -> list:
         query_string = """
         {
           projects(last: 10000) {
