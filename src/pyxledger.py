@@ -15,7 +15,7 @@ class Client:
         response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
         data = response.json()
 
-        if data["errors"]:
+        if "errors" in data and data["errors"]:
             raise PyXLedgerException(data["errors"][0]["message"])
 
         # Extract the list of dictionaries
