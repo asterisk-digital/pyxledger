@@ -3,12 +3,12 @@ from graphql import build_client_schema, get_introspection_query, print_schema
 
 
 class Client:
-    def __init__(self, api_url: str, credentials: dict):
-        self.api_url = f"https://www.{api_url}"
-        self.token = credentials["token"]
+    def __init__(self, api_token: str, api_domain: str = "www.xledger.net"):
+        self.api_url = f"https://{api_domain}/graphql"
+        self.api_token = api_token
 
     def get_all_data(self, query_string, model):
-        headers = {"Authorization": f"token {self.token}"}
+        headers = {"Authorization": f"token {self.api_token}"}
 
         response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
         data = response.json()
@@ -46,7 +46,7 @@ class Client:
         """
         formatted_query = query_string % type_name
 
-        headers = {"Authorization": f"token {self.token}"}
+        headers = {"Authorization": f"token {self.api_token}"}
 
         response = requests.post(self.api_url, json={"query": formatted_query}, headers=headers)
         data = response.json()
@@ -180,7 +180,7 @@ class Client:
 
     # Raw query function
     def query(self, query_string):
-        headers = {"Authorization": f"token {self.token}"}
+        headers = {"Authorization": f"token {self.api_token}"}
 
         response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
         data = response.json()
