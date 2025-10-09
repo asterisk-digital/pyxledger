@@ -27,36 +27,37 @@ class Client:
 
         return result_dicts
 
-    def get_all_fields(self, type_name):
-        query_string = """
-        {
-          __type(name: "%s") {
+    def get_all_fields(self, type_name: str) -> list[str]:
+        """
+        Returns a flat list of all field names for a given GraphQL type (non-recursive).
+        """
+        query = f"""
+        {{
+          __type(name: "{type_name}") {{
             name
-            fields {
+            fields {{
               name
-              type {
+              type {{
                 kind
                 name
-                ofType {
+                ofType {{
                   kind
                   name
-                  ofType {
+                  ofType {{
                     kind
                     name
-                  }
-                }
-              }
-            }
-          }
-        }
+                  }}
+                }}
+              }}
+            }}
+          }}
+        }}
         """
-        formatted_query = query_string % type_name
-
-        headers = {"Authorization": f"token {self.api_token}"}
-
-        response = requests.post(self.api_url, json={"query": formatted_query}, headers=headers)
-        data = response.json()
-        return data["data"]["__type"]["fields"]
+        data = self.query(query)
+        fields = data["data"]["__type"]
+        if not fields:
+            raise PyXLedgerException(f"Type '{type_name}' not found in schema.")
+        return [f["name"] for f in fields["fields"]]
 
     def get_customers(self):
         query_string = """
