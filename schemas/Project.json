@@ -1,0 +1,889 @@
+{
+  "data": {
+    "__type": {
+      "fields": [
+        {
+          "name": "fromDate",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "toDate",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "dbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "code",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "description",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "createdAt",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateTimeString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "modifiedAt",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateTimeString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "text",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ownerDbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "email",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "yourReference",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "extIdentifier",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "external",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "billable",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fixedClient",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "allowPosting",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "timesheetEntry",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "accessControl",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "assignment",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "activity",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "extOrder",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "contract",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "progressDate",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateTimeString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "pctCompleted",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "overview",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "expenseLedger",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fundProject",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "invoiceHeader",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "invoiceFooter",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "totalRevenue",
+          "type": {
+            "kind": "SCALAR",
+            "name": "MoneyString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "yearlyRevenue",
+          "type": {
+            "kind": "SCALAR",
+            "name": "MoneyString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "contractedRevenue",
+          "type": {
+            "kind": "SCALAR",
+            "name": "MoneyString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "totalCost",
+          "type": {
+            "kind": "SCALAR",
+            "name": "MoneyString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "yearlyCost",
+          "type": {
+            "kind": "SCALAR",
+            "name": "MoneyString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "totalEstimateHours",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "yearlyEstimateHours",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "budgetCoveragePercent",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "mainProjectDbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "shortInfo",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "shortInternalInfo",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "hasFlexiField",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldFlag1",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldFlag2",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldFlag3",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldFlag4",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Boolean",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldDate1",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldDate2",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldDate3",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldDate4",
+          "type": {
+            "kind": "SCALAR",
+            "name": "DateString",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldValue1",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldValue2",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldValue3",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldValue4",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Float",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldNumber1",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldNumber2",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText1",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText2",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText3",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText4",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText5",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText6",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText7",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldText8",
+          "type": {
+            "kind": "SCALAR",
+            "name": "String",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode1DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode2DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode3DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode4DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode5DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode6DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode7DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldCode8DbId",
+          "type": {
+            "kind": "SCALAR",
+            "name": "Int",
+            "ofType": null
+          }
+        },
+        {
+          "name": "projectGroup",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "projectOwner",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Owner",
+            "ofType": null
+          }
+        },
+        {
+          "name": "incomeSpec",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "invoiceProject",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Project",
+            "ofType": null
+          }
+        },
+        {
+          "name": "invoiceRule",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "paymentTerms",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "priceGroup",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "pricelist",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "projectManager",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Employee",
+            "ofType": null
+          }
+        },
+        {
+          "name": "reportSetup",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "shippingTerms",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "user",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "customer",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Customer",
+            "ofType": null
+          }
+        },
+        {
+          "name": "externalContact",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Contact",
+            "ofType": null
+          }
+        },
+        {
+          "name": "latePaymentCode",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "mainProject",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Project",
+            "ofType": null
+          }
+        },
+        {
+          "name": "flexiFieldsItem",
+          "type": {
+            "kind": "OBJECT",
+            "name": "FlexiFieldsItem",
+            "ofType": null
+          }
+        },
+        {
+          "name": "xgl",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "currency",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Currency",
+            "ofType": null
+          }
+        },
+        {
+          "name": "soOrderLevel",
+          "type": {
+            "kind": "OBJECT",
+            "name": "SystemValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "pmSoInvoiceLevel",
+          "type": {
+            "kind": "OBJECT",
+            "name": "SystemValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "invoiceLayout",
+          "type": {
+            "kind": "OBJECT",
+            "name": "SystemValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "invoiceDeliveryMethod",
+          "type": {
+            "kind": "OBJECT",
+            "name": "SystemValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "incomePeriodization",
+          "type": {
+            "kind": "OBJECT",
+            "name": "SystemValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "billAddress",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Address",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ourSales",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Contact",
+            "ofType": null
+          }
+        },
+        {
+          "name": "ourRef",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Contact",
+            "ofType": null
+          }
+        },
+        {
+          "name": "shipAddress",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Address",
+            "ofType": null
+          }
+        },
+        {
+          "name": "glObject5",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "glObject4",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "glObject3",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "glObject2",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "glObject1",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "subledger",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Subledger",
+            "ofType": null
+          }
+        },
+        {
+          "name": "owner",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Owner",
+            "ofType": null
+          }
+        },
+        {
+          "name": "company",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Company",
+            "ofType": null
+          }
+        },
+        {
+          "name": "tasks",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ProjectTaskConnection",
+            "ofType": null
+          }
+        },
+        {
+          "name": "taxRule",
+          "type": {
+            "kind": "OBJECT",
+            "name": "ObjectValue",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fundRecipient",
+          "type": {
+            "kind": "OBJECT",
+            "name": "Supplier",
+            "ofType": null
+          }
+        }
+      ],
+      "name": "Project"
+    }
+  }
+}
