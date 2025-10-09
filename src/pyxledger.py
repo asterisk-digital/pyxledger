@@ -1,5 +1,5 @@
 import requests
-from graphql import build_client_schema, get_introspection_query, print_schema
+from graphql import get_introspection_query, build_client_schema, is_object_type, is_input_object_type, is_enum_type
 
 class PyXLedgerException(Exception):
     pass
@@ -181,9 +181,10 @@ class Client:
 
         return self.get_all_data(query_string, "projects")
 
-    def get_introspection(self):
-        introspection_query = get_introspection_query()
-        return self.query(introspection_query)
+    def get_schema(self):
+        """Return a GraphQLSchema object via introspection."""
+        data = self.query(get_introspection_query())
+        return build_client_schema(data["data"])
 
     # Raw query function
     def query(self, query_string):
@@ -192,3 +193,76 @@ class Client:
         response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
         data = response.json()
         return data
+
+    def _enum_value_names(self, enum_type) -> list[str]:
+        """
+        Cross-version safe way to get enum value names.
+        graphql-core v3: enum_type.values is a dict {name: GraphQLEnumValue}
+        Some variants may expose it as an iterable of values.
+        """
+        vals = getattr(enum_type, "values", None)
+        if vals is None:
+            return []
+        if isinstance(vals, dict):
+            return list(vals.keys())
+        # Fallback: iterable of enum values/strings
+        names = []
+        for v in vals:
+            names.append(getattr(v, "name", str(v)))
+        return names
+
+    def find_everything_status(self, needle: str = "status"):
+        """
+        Search the whole schema for:
+          - Fields whose name contains 'status'
+          - Types with 'Status' in the name
+          - Enum types and their values containing 'status'
+          - Field arguments named like 'status'
+        """
+        schema = self.get_schema()
+        type_map = schema.type_map
+
+        needle_lower = needle.lower()
+        result = {
+            "fields": [],  # (parentType, fieldName, fieldType)
+            "args": [],  # (parentType, fieldName, argName, argType)
+            "types": [],  # typeName
+            "enums": [],  # (enumType, [matchingValues])
+        }
+
+        for tname, gtype in type_map.items():
+            if tname.startswith("__"):
+                continue
+
+            # Types whose names contain 'status'
+            if "status" in tname.lower():
+                result["types"].append(tname)
+
+            # Object fields & their args
+            if is_object_type(gtype):
+                # In graphql-core v3, .fields is a dict {name: GraphQLField}
+                fields = getattr(gtype, "fields", {}) or {}
+                for fname, f in fields.items():
+                    if needle_lower in fname.lower():
+                        result["fields"].append((tname, fname, str(f.type)))
+                    # Args is a dict {name: GraphQLArgument}
+                    args = getattr(f, "args", {}) or {}
+                    for aname, arg in args.items():
+                        if needle_lower in aname.lower():
+                            result["args"].append((tname, fname, aname, str(arg.type)))
+
+            # Input object "fields" (used inside arguments)
+            if is_input_object_type(gtype):
+                in_fields = getattr(gtype, "fields", {}) or {}
+                for iname, ifield in in_fields.items():
+                    if needle_lower in iname.lower():
+                        result["args"].append((tname, "(input)", iname, str(ifield.type)))
+
+            # Enums
+            if is_enum_type(gtype):
+                value_names = self._enum_value_names(gtype)
+                matches = [n for n in value_names if needle_lower in n.lower()]
+                if matches or ("status" in tname.lower()):
+                    result["enums"].append((tname, matches))
+
+        return result
