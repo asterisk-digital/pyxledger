@@ -1,3 +1,5 @@
+from typing import Any
+
 import requests
 from graphql import get_introspection_query, build_client_schema, is_object_type, is_input_object_type, is_enum_type
 
@@ -9,11 +11,22 @@ class Client:
         self.api_url = f"https://{api_domain}/graphql"
         self.api_token = api_token
 
-    def get_all_data(self, query_string: str, model: str) -> list[dict]:
+    # Raw query function
+    def query_raw(self, query_string: str) -> requests.Response:
         headers = {"Authorization": f"token {self.api_token}"}
 
         response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
+        return response
+
+    # Query function with error handling
+    def query(self, query_string: str) -> Any:
+        response = self.query_raw(query_string)
+        response.raise_for_status()
         data = response.json()
+        return data
+
+    def get_all_data(self, query_string: str, model: str) -> list[dict]:
+        data = self.query(query_string)
 
         if "errors" in data and data["errors"]:
             raise PyXLedgerException(data["errors"][0]["message"])
@@ -185,14 +198,6 @@ class Client:
         """Return a GraphQLSchema object via introspection."""
         data = self.query(get_introspection_query())
         return build_client_schema(data["data"])
-
-    # Raw query function
-    def query(self, query_string):
-        headers = {"Authorization": f"token {self.api_token}"}
-
-        response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
-        data = response.json()
-        return data
 
     def _enum_value_names(self, enum_type) -> list[str]:
         """
