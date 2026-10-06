@@ -31,9 +31,7 @@ def page(model, ids, has_next):
 
 @patch("requests.post")
 def test_get_all_data_flattens_edges(post):
-    post.return_value = mock_response(
-        {"data": {"projects": {"edges": [{"node": {"dbId": 1}}, {"node": {"dbId": 2}}]}}}
-    )
+    post.return_value = mock_response({"data": {"projects": {"edges": [{"node": {"dbId": 1}}, {"node": {"dbId": 2}}]}}})
 
     assert Client("abc").get_all_data("{ projects { edges { node { dbId } } } }", "projects") == [
         {"dbId": 1},

@@ -4,15 +4,13 @@ A small Python client for the Xledger GraphQL API.
 
 ## Install
 
-```bash
-pip install git+https://github.com/asterisk-digital/pyxledger.git
+Add it to `dependencies` in your `pyproject.toml`:
+
+```toml
+"pyxledger @ git+https://github.com/asterisk-digital/pyxledger.git@main"
 ```
 
-It also works as a git submodule, importable as `pyxledger` from the folder it's checked out into:
-
-```bash
-git submodule add https://github.com/asterisk-digital/pyxledger.git ./src/pyxledger
-```
+For development, run `uv sync`.
 
 ## Usage
 

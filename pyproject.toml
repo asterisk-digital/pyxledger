@@ -5,31 +5,48 @@ description = "Library to interact with the Xledger API"
 authors = [{ name = "David Skoland", email = "david.skoland@asterisk.digital" }]
 requires-python = ">=3.11"
 
+readme = "README.md"
+license = { text = "MIT" }
+
 dependencies = [
     "graphql-core>=3.2",
     "requests>=2.28",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "pytest",
-    "setuptools",
-    "wheel",
-    "ruff",
-    "tox",
-    "tox-uv"
+    "ruff==0.15.7",
+    "tox==4.50.3",
+    "tox-uv==1.33.4",
+    "pytest==9.0.3",
 ]
 
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [tool.pytest.ini_options]
-minversion = "6.0"
 addopts = "-ra"
 testpaths = ["tests"]
+
+[tool.tox]
+requires = ["tox>=4.22"]
+env_list = ["py311", "py312", "py313", "py314"]
+
+[tool.tox.env_run_base]
+description = "Run tests with pytest"
+package = "editable"
+dependency_groups = ["dev"]
+set_env = { PYTHONPATH = "{tox_root}/src" }
+commands = [["pytest"]]
 
 [tool.ruff]
 line-length = 120
 lint.select = ["E", "F"]
-exclude = ["build", "dist", "venv"]
+
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pyxledger*"]

@@ -1,0 +1,2 @@
+class PyXLedgerException(Exception):
+    pass

@@ -3,6 +3,8 @@ from typing import Any
 import requests
 from graphql import build_client_schema, get_introspection_query
 
+from .exceptions import PyXLedgerException
+
 CUSTOMER_FIELDS = """
 dbId
 description
@@ -77,10 +79,6 @@ owner {
     dbId
 }
 """
-
-
-class PyXLedgerException(Exception):
-    pass
 
 
 class Client:
