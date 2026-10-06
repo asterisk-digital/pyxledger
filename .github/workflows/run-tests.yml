@@ -1,6 +1,9 @@
 name: Run Tests
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -10,26 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
+      - uses: astral-sh/setup-uv@v10
 
-      - name: Install uv
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      - name: Lint
+        run: uvx ruff check .
 
-      - name: Create virtual environment with uv
-        run: |
-          uv venv venv
-          echo "venv/bin" >> $GITHUB_PATH
-
-      - name: Install dependencies with uv
-        run: uv pip install .[dev]
-
-      - name: Run tests
-        run: tox -e py
+      - name: Test
+        run: uvx --with tox-uv tox

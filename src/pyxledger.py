@@ -1,273 +1,166 @@
 from typing import Any
 
 import requests
-from graphql import get_introspection_query, build_client_schema, is_object_type, is_input_object_type, is_enum_type
+from graphql import build_client_schema, get_introspection_query
+
+CUSTOMER_FIELDS = """
+dbId
+description
+code
+id
+address {
+    zipCode
+    streetAddress
+    place
+    country {
+        code
+        description
+    }
+    state {
+        description
+        code
+    }
+}
+company {
+    companyNumber
+}
+contact {
+    dbId
+}
+"""
+
+CONTACT_FIELDS = """
+dbId
+phone
+email
+firstName
+middleName
+lastName
+aliasName
+companyName
+company {
+    companyNumber
+    description
+}
+"""
+
+SUPPLIER_FIELDS = """
+dbId
+description
+code
+address {
+    zipCode
+    streetAddress
+    place
+    country {
+        code
+        description
+    }
+    state {
+        description
+        code
+    }
+}
+company {
+    companyNumber
+}
+contact {
+    dbId
+}
+"""
+
+PROJECT_FIELDS = """
+dbId
+code
+description
+owner {
+    dbId
+}
+"""
+
 
 class PyXLedgerException(Exception):
     pass
 
+
 class Client:
-    def __init__(self, api_token: str, api_domain: str = "www.xledger.net"):
-        self.api_url = f"https://{api_domain}/graphql"
+    def __init__(self, api_token: str, api_url: str = "https://www.xledger.net/graphql"):
+        self.api_url = api_url
         self.api_token = api_token
 
-    # Raw query function
-    def query_raw(self, query_string: str) -> requests.Response:
+    def query_raw(self, query_string: str, variables: dict | None = None) -> requests.Response:
         headers = {"Authorization": f"token {self.api_token}"}
+        payload = {"query": query_string}
+        if variables:
+            payload["variables"] = variables
 
-        response = requests.post(self.api_url, json={"query": query_string}, headers=headers)
-        return response
+        return requests.post(self.api_url, json=payload, headers=headers)
 
-    # Query function with error handling
-    def query(self, query_string: str) -> Any:
-        response = self.query_raw(query_string)
+    def query(self, query_string: str, variables: dict | None = None) -> Any:
+        response = self.query_raw(query_string, variables)
         response.raise_for_status()
-        data = response.json()
-        return data
+        return response.json()
+
+    def _query_checked(self, query_string: str, variables: dict | None = None) -> dict:
+        data = self.query(query_string, variables)
+        if data.get("errors"):
+            raise PyXLedgerException(data["errors"][0]["message"])
+        return data["data"]
 
     def get_all_data(self, query_string: str, model: str) -> list[dict]:
-        data = self.query(query_string)
+        """Run a single query and return the nodes of `model`. Does not paginate; see `get_all`."""
+        data = self._query_checked(query_string)
+        return [edge["node"] for edge in data[model]["edges"]]
 
-        if "errors" in data and data["errors"]:
-            raise PyXLedgerException(data["errors"][0]["message"])
-
-        # Extract the list of dictionaries
-        result_dicts = []
-        for entry in data["data"][model]["edges"]:
-            # db_id = entry["node"]["dbId"]
-            values = {key: value for key, value in entry["node"].items()}
-            result_dicts.append(values)
-
-        return result_dicts
-
-    def get_all_fields(self, type_name: str) -> list[str]:
-        """
-        Returns a flat list of all field names for a given GraphQL type (non-recursive).
-        """
-        query = f"""
-        {{
-          __type(name: "{type_name}") {{
-            name
-            fields {{
-              name
-              type {{
-                kind
-                name
-                ofType {{
-                  kind
-                  name
-                  ofType {{
-                    kind
-                    name
-                  }}
-                }}
-              }}
+    def get_all(self, model: str, fields: str, page_size: int = 1000) -> list[dict]:
+        """Fetch every node of `model` (e.g. "customers"), following cursors until the last page."""
+        query_string = f"""
+        query ($first: Int, $after: String) {{
+          {model}(first: $first, after: $after) {{
+            edges {{
+              cursor
+              node {{ {fields} }}
             }}
+            pageInfo {{ hasNextPage }}
           }}
         }}
         """
-        data = self.query(query)
-        fields = data["data"]["__type"]
-        if not fields:
+        nodes = []
+        after = None
+        while True:
+            page = self._query_checked(query_string, {"first": page_size, "after": after})[model]
+            nodes.extend(edge["node"] for edge in page["edges"])
+            if not page["pageInfo"]["hasNextPage"] or not page["edges"]:
+                return nodes
+            after = page["edges"][-1]["cursor"]
+
+    def get_all_fields(self, type_name: str) -> list[str]:
+        """Return the field names of a GraphQL type (non-recursive)."""
+        query_string = """
+        query ($name: String!) {
+          __type(name: $name) {
+            fields { name }
+          }
+        }
+        """
+        gql_type = self._query_checked(query_string, {"name": type_name})["__type"]
+        if not gql_type:
             raise PyXLedgerException(f"Type '{type_name}' not found in schema.")
-        return [f["name"] for f in fields["fields"]]
+        return [f["name"] for f in gql_type["fields"]]
 
-    def get_customers(self):
-        query_string = """
-        {
-          customers(last: 10000) {
-            edges {
-              node {
-                dbId
-                description
-                code
-                id
-                description
-                address {
-                    zipCode
-                    streetAddress
-                    place
-                    country {
-                        code
-                        description
-                    }
-                    state {
-                        description
-                        code
-                    }
-                }
-                company {
-                    companyNumber
-                }
-                contact {
-                    dbId
-                 }
-              }
-            }
-          }
-        }
-        """
+    def get_customers(self) -> list[dict]:
+        return self.get_all("customers", CUSTOMER_FIELDS)
 
-        return self.get_all_data(query_string, "customers")
+    def get_contacts(self) -> list[dict]:
+        return self.get_all("contacts", CONTACT_FIELDS)
 
-    def get_contacts(self):
-        query_string = """
-        {
-          contacts(last: 10000) {
-            edges {
-              node {
-                dbId
-                phone
-                email
-                firstName
-                middleName
-                lastName
-                aliasName
-                companyName
-                company {
-                    companyNumber
-                    description
-                }
-                }
-            }
-          }
-        }
-        """
+    def get_suppliers(self) -> list[dict]:
+        return self.get_all("suppliers", SUPPLIER_FIELDS)
 
-        return self.get_all_data(query_string, "contacts")
-
-    def get_suppliers(self):
-        query_string = """
-        {
-          suppliers(last: 10000) {
-            edges {
-              node {
-                dbId
-                description
-                code
-
-                address {
-                    zipCode
-                    streetAddress
-                    place
-                    country {
-                        code
-                        description
-                    }
-                    state {
-                        description
-                        code
-                    }
-                }
-                company {
-                    companyNumber
-                }
-                contact {
-                    dbId
-                }
-              }
-            }
-          }
-        }
-        """
-
-        return self.get_all_data(query_string, "suppliers")
-
-    def get_projects(self) -> list:
-        query_string = """
-        {
-          projects(last: 10000) {
-            edges {
-              node {
-                dbId
-                code
-                description
-
-                owner {
-                    dbId
-                }
-              }
-            }
-          }
-        }
-        """
-
-        return self.get_all_data(query_string, "projects")
+    def get_projects(self) -> list[dict]:
+        return self.get_all("projects", PROJECT_FIELDS)
 
     def get_schema(self):
         """Return a GraphQLSchema object via introspection."""
         data = self.query(get_introspection_query())
         return build_client_schema(data["data"])
-
-    def _enum_value_names(self, enum_type) -> list[str]:
-        """
-        Cross-version safe way to get enum value names.
-        graphql-core v3: enum_type.values is a dict {name: GraphQLEnumValue}
-        Some variants may expose it as an iterable of values.
-        """
-        vals = getattr(enum_type, "values", None)
-        if vals is None:
-            return []
-        if isinstance(vals, dict):
-            return list(vals.keys())
-        # Fallback: iterable of enum values/strings
-        names = []
-        for v in vals:
-            names.append(getattr(v, "name", str(v)))
-        return names
-
-    def find_everything_status(self, needle: str = "status"):
-        """
-        Search the whole schema for:
-          - Fields whose name contains 'status'
-          - Types with 'Status' in the name
-          - Enum types and their values containing 'status'
-          - Field arguments named like 'status'
-        """
-        schema = self.get_schema()
-        type_map = schema.type_map
-
-        needle_lower = needle.lower()
-        result = {
-            "fields": [],  # (parentType, fieldName, fieldType)
-            "args": [],  # (parentType, fieldName, argName, argType)
-            "types": [],  # typeName
-            "enums": [],  # (enumType, [matchingValues])
-        }
-
-        for tname, gtype in type_map.items():
-            if tname.startswith("__"):
-                continue
-
-            # Types whose names contain 'status'
-            if "status" in tname.lower():
-                result["types"].append(tname)
-
-            # Object fields & their args
-            if is_object_type(gtype):
-                # In graphql-core v3, .fields is a dict {name: GraphQLField}
-                fields = getattr(gtype, "fields", {}) or {}
-                for fname, f in fields.items():
-                    if needle_lower in fname.lower():
-                        result["fields"].append((tname, fname, str(f.type)))
-                    # Args is a dict {name: GraphQLArgument}
-                    args = getattr(f, "args", {}) or {}
-                    for aname, arg in args.items():
-                        if needle_lower in aname.lower():
-                            result["args"].append((tname, fname, aname, str(arg.type)))
-
-            # Input object "fields" (used inside arguments)
-            if is_input_object_type(gtype):
-                in_fields = getattr(gtype, "fields", {}) or {}
-                for iname, ifield in in_fields.items():
-                    if needle_lower in iname.lower():
-                        result["args"].append((tname, "(input)", iname, str(ifield.type)))
-
-            # Enums
-            if is_enum_type(gtype):
-                value_names = self._enum_value_names(gtype)
-                matches = [n for n in value_names if needle_lower in n.lower()]
-                if matches or ("status" in tname.lower()):
-                    result["enums"].append((tname, matches))
-
-        return result

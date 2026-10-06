@@ -1,3 +1,3 @@
-from .pyxledger import *
+from .pyxledger import Client, PyXLedgerException
 
-__all__ = ["Client"]
+__all__ = ["Client", "PyXLedgerException"]
