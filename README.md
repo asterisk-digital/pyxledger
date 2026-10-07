@@ -1,31 +1,25 @@
 # pyxledger
 
-A simple Python library for interfacing with the XLedger API
+A small Python client for the Xledger GraphQL API.
 
-## Setup
+## Install
 
-This is typically used as a submodule, which can be added to a python project as follows:
+Add it to `dependencies` in your `pyproject.toml`:
 
-```(bash)
-git submodule add git@github.com:intrix-as/pyxledger.git ./src/pyxledger
+```toml
+"pyxledger @ git+https://github.com/asterisk-digital/pyxledger.git@main"
 ```
 
-This will put pyxledger in the src/pyxledger folder of the project, which can then be imported as a module.
-
-The library can be used as follows:
+For development, run `uv sync`.
 
 ## Usage
 
-```(python)
+```python
 import pyxledger
 
-url = 'xledger.net/graphql'
-credentials = {
-  'token': 'your_token'
-}
+client = pyxledger.Client("your_token")  # api_url defaults to "https://www.xledger.net/graphql"
 
-client = pyxledger.Client(url, credentials)
-
-# Getting customers is an example here
-result = client.get_customers()
+customers = client.get_customers()
 ```
+
+The `get_*` helpers page through all records. For other models use `client.get_all("model", "fields")`, or pass any GraphQL to `client.query()`.
